@@ -2,6 +2,7 @@
 import { appDatabase } from '../../data/database/appDatabase'
 import { FEED_RECOMMENDATIONS_INITIALIZATION_ID } from '../../models/appMetadata'
 import { validateFullExport } from './validateFullExport'
+import { deviceZipFileName } from './deviceZipFileName'
 
 const DEVICE_ID_KEY = 'welliathome-device-id-v1'
 const MAX_ARCHIVE_BYTES = 100 * 1024 * 1024
@@ -138,7 +139,7 @@ export async function createFullExport(): Promise<File> {
     throw new Error('Die Daten überschreiten das Exportlimit von 100 MB.')
   const file = new File(
     [archive as Uint8Array<ArrayBuffer>],
-    `wha_daten-${createdAt.replace(/[:.]/g, '-')}-${packageId}.zip`,
+    deviceZipFileName(createdAt, 'daten'),
     { type: 'application/zip' },
   )
   await validateFullExport(file)

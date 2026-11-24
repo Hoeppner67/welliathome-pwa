@@ -179,7 +179,9 @@ it('exportiert Änderungen und Mediendaten wiederholt, ohne Operationen als zuge
   const second = unzipSync(new Uint8Array(await secondFile.arrayBuffer()))
   const ops = JSON.parse(strFromU8(first['operations.json']))
   const manifest = JSON.parse(strFromU8(first['manifest.json']))
-  expect(firstFile.name).toContain(manifest.packageId)
+  expect(firstFile.name).toMatch(
+    /^wah_update_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}(?:-\d+)?\.zip$/,
+  )
   expect(secondFile.name).not.toBe(firstFile.name)
   expect(ops.map((item: { action: string }) => item.action)).toEqual(['put', 'delete'])
   expect(strFromU8(first[ops[0].after.mediaPath])).toBe('bild')

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react'
-import { Link } from 'react-router-dom'
 import { Button } from '../../../shared/components/Button'
 import { Card } from '../../../shared/components/Card'
 import { Icon } from '../../../shared/components/Icon'
@@ -290,9 +289,6 @@ export function BackupPage() {
 
   return (
     <section className="backup-page" aria-labelledby="backup-title">
-      <Link className="back-link" to="/">
-        ← Startseite
-      </Link>
       <header className="backup-page__intro">
         <p className="eyebrow">Welli@Home</p>
         <h1 id="backup-title">Datensicherung</h1>

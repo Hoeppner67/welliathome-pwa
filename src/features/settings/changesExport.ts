@@ -3,6 +3,7 @@ import { appDatabase, type AppDatabase } from '../../data/database/appDatabase'
 import { deviceId } from './fullExport'
 import { reconcileChanges } from './reconcileChanges'
 import { validateChangesExport } from './validateChangesExport'
+import { deviceZipFileName } from './deviceZipFileName'
 
 const MAX_BYTES = 100 * 1024 * 1024
 
@@ -78,7 +79,7 @@ export async function createChangesExport(
     throw new Error('Das Änderungspaket überschreitet das Limit von 100 MB.')
   const file = new File(
     [archive as Uint8Array<ArrayBuffer>],
-    `wha_update-${now.replace(/[:.]/g, '-')}-${packageId}.zip`,
+    deviceZipFileName(now, 'update'),
     { type: 'application/zip' },
   )
   await validateChangesExport(file)

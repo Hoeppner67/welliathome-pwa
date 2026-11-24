@@ -17,12 +17,10 @@ import {
   supportsPreferredFolder,
 } from './preferredFolder'
 import {
-  folderDisplayName,
   folderFileKind,
-  folderPackageStatus,
+  inspectFolderPackage,
   type FolderPackageStatus,
 } from './folderPackageStatus'
-import { validateFullExport } from './validateFullExport'
 import {
   importFullExport,
   previewFullExport,
@@ -79,6 +77,7 @@ export function SettingsPage() {
   const [folderSelection, setFolderSelection] = useState<string[]>([])
   const [folderSelectionError, setFolderSelectionError] = useState('')
   const [folderStatuses, setFolderStatuses] = useState<Record<string, FolderPackageStatus>>({})
+  const [folderKinds, setFolderKinds] = useState<Record<string, 'full' | 'changes'>>({})
   const [folderDates, setFolderDates] = useState<Record<string, string>>({})
   const [folderSettingsOpen, setFolderSettingsOpen] = useState(false)
   const [openSection, setOpenSection] = useState<'changes' | 'all' | null>(() => {
@@ -190,6 +189,7 @@ export function SettingsPage() {
     setFolderFiles([])
     setFolderSelection([])
     setFolderStatuses({})
+    setFolderKinds({})
     setFolderDates({})
     setBusy(true)
     setError('')
@@ -197,14 +197,13 @@ export function SettingsPage() {
     try {
       const files = await listPreferredFolderZips()
       const statuses: Record<string, FolderPackageStatus> = {}
+      const kinds: Record<string, 'full' | 'changes'> = {}
       const dates: Record<string, string> = {}
       for (const file of files) {
-        statuses[file.name] = await folderPackageStatus(file)
-        try {
-          dates[file.name] = (await validateFullExport(file)).createdAt
-        } catch {
-          /* Not a valid full snapshot. */
-        }
+        const info = await inspectFolderPackage(file)
+        statuses[file.name] = info.status
+        if (info.kind) kinds[file.name] = info.kind
+        if (info.createdAt) dates[file.name] = info.createdAt
         if (statuses[file.name] === 'new') {
           try {
             const preview = dates[file.name]
@@ -218,6 +217,7 @@ export function SettingsPage() {
       }
       setFolderFiles(files)
       setFolderStatuses(statuses)
+      setFolderKinds(kinds)
       setFolderDates(dates)
       setFolderSelection([])
       if (!files.length) setNotice('Im ausgewählten Ordner wurden keine ZIP-Dateien gefunden.')
@@ -234,7 +234,7 @@ export function SettingsPage() {
 
   function selectFolderFiles() {
     const files = folderFiles.filter((file) => folderSelection.includes(file.name))
-    const kinds = files.map((file) => folderFileKind(file.name))
+    const kinds = files.map((file) => folderKinds[file.name] ?? folderFileKind(file.name))
     if (kinds.some((kind) => !kind)) {
       setFolderSelectionError(
         'Der Dateityp ist am Namen nicht erkennbar. Bitte verwende die manuelle Dateiauswahl.',
@@ -384,6 +384,8 @@ export function SettingsPage() {
       setFullExported(false)
       localStorage.setItem(INITIALIZATION_KEY, 'ready')
       setInitializationRequired(false)
+      setOpenSection('all')
+      localStorage.setItem('welliathome-sync-open-section', 'all')
       setNotice(
         'Der vollständige Datenbestand ist vorbereitet. Speichere oder teile ihn für die Einrichtung weiterer Geräte.',
       )
@@ -901,7 +903,7 @@ export function SettingsPage() {
                       </button>
                     )}
                   </div>
-                  <div className="settings-actions">
+                  <div className="settings-actions settings-import-actions">
                     {useFolder && folderName && supportsPreferredFolder() && (
                       <button
                         className={`button settings-folder-action${changesImported ? ' settings-folder-action--completed' : ''}`}
@@ -915,28 +917,36 @@ export function SettingsPage() {
                         Änderungen importieren
                       </button>
                     )}
-                    <label htmlFor="changes-file">
-                      {useFolder && folderName && supportsPreferredFolder()
-                        ? 'ZIP-Dateien manuell auswählen'
-                        : 'Änderungen importieren'}
-                    </label>
-                    <input
-                      id="changes-file"
-                      type="file"
-                      accept=".zip,application/zip"
-                      multiple
-                      disabled={busy}
-                      onChange={(event) => {
-                        setChangesFiles(Array.from(event.target.files ?? []))
-                        setChangesPreview(null)
-                        event.target.value = ''
-                        setError('')
-                        setNotice('')
-                      }}
-                    />
-                    {changesFiles.length > 0 && (
-                      <p>Ausgewählt: {changesFiles.map((file) => file.name).join(', ')}</p>
-                    )}
+                    <div className="settings-file-picker">
+                      <input
+                        id="changes-file"
+                        className="settings-file-picker__input"
+                        type="file"
+                        accept=".zip,application/zip"
+                        multiple
+                        aria-label={
+                          useFolder && folderName && supportsPreferredFolder()
+                            ? 'ZIP-Dateien manuell auswählen'
+                            : 'Änderungen importieren'
+                        }
+                        disabled={busy}
+                        onChange={(event) => {
+                          setChangesFiles(Array.from(event.target.files ?? []))
+                          setChangesPreview(null)
+                          event.target.value = ''
+                          setError('')
+                          setNotice('')
+                        }}
+                      />
+                      <label className="button settings-file-picker__button" htmlFor="changes-file">
+                        Datei auswählen
+                      </label>
+                      <span className="settings-file-picker__name" aria-live="polite">
+                        {changesFiles.length
+                          ? changesFiles.map((file) => file.name).join(', ')
+                          : 'Keine Datei ausgewählt'}
+                      </span>
+                    </div>
                     <button
                       className="button"
                       type="button"
@@ -1041,8 +1051,7 @@ export function SettingsPage() {
                     </button>
                   )}
                 </div>
-                <div className="settings-actions">
-                  <label htmlFor="snapshot-file">Vollständigen Datenbestand importieren</label>
+                <div className="settings-actions settings-import-actions">
                   {useFolder && folderName && supportsPreferredFolder() && (
                     <button
                       className={`button settings-folder-action${fullImported ? ' settings-folder-action--completed' : ''}`}
@@ -1056,20 +1065,29 @@ export function SettingsPage() {
                       Aus bevorzugtem Ordner einlesen
                     </button>
                   )}
-                  <input
-                    id="snapshot-file"
-                    type="file"
-                    accept=".zip,application/zip"
-                    disabled={busy}
-                    onChange={(event) => {
-                      setSelectedFile(event.target.files?.[0] ?? null)
-                      setFullPreview(null)
-                      event.target.value = ''
-                      setError('')
-                      setNotice('')
-                    }}
-                  />
-                  {selectedFile && <p>Ausgewählt: {selectedFile.name}</p>}
+                  <div className="settings-file-picker">
+                    <input
+                      id="snapshot-file"
+                      className="settings-file-picker__input"
+                      type="file"
+                      accept=".zip,application/zip"
+                      aria-label="Vollständigen Datenbestand importieren"
+                      disabled={busy}
+                      onChange={(event) => {
+                        setSelectedFile(event.target.files?.[0] ?? null)
+                        setFullPreview(null)
+                        event.target.value = ''
+                        setError('')
+                        setNotice('')
+                      }}
+                    />
+                    <label className="button settings-file-picker__button" htmlFor="snapshot-file">
+                      Datei auswählen
+                    </label>
+                    <span className="settings-file-picker__name" aria-live="polite">
+                      {selectedFile?.name ?? 'Keine Datei ausgewählt'}
+                    </span>
+                  </div>
                   <button
                     className="button"
                     type="button"
@@ -1140,7 +1158,7 @@ export function SettingsPage() {
                             : undefined
                       }
                     >
-                      {folderDisplayName(file.name, folderDates[file.name])}
+                      {file.name}
                     </span>
                     {folderDates[file.name] &&
                       ` (${new Date(folderDates[file.name]).toLocaleDateString('de-DE')} / ${new Date(folderDates[file.name]).toLocaleTimeString('de-DE')} Uhr)`}
