@@ -8,6 +8,7 @@ import * as changesExport from './changesExport'
 import * as fullExport from './fullExport'
 import * as fileActions from './shareFile'
 import * as changesImport from './importChangesExport'
+import * as changesReconcile from './reconcileChanges'
 import * as preferredFolder from './preferredFolder'
 
 afterEach(() => {
@@ -189,6 +190,30 @@ it('sperrt Änderungspakete bis zur ausdrücklich gewählten Initialisierung', (
   ).toBe(false)
 })
 
+it('öffnet nach dem Start eines gemeinsamen Datenbestands den Bereich Alle Daten', async () => {
+  localStorage.setItem('welliathome-device-sync-enabled', 'true')
+  localStorage.setItem('welliathome-device-sync-initialized', 'required')
+  vi.spyOn(changesReconcile, 'reconcileChanges').mockResolvedValue({
+    captured: 0,
+    initialized: true,
+  })
+  vi.spyOn(fullExport, 'createFullExport').mockResolvedValue(new File(['zip'], 'snapshot.zip'))
+  render(
+    <MemoryRouter>
+      <SettingsPage />
+    </MemoryRouter>,
+  )
+
+  fireEvent.click(screen.getByText('Änderungen'))
+  fireEvent.click(screen.getByRole('button', { name: 'Neuen gemeinsamen Datenbestand beginnen' }))
+
+  await waitFor(() => {
+    expect(screen.getByText('Alle Daten').closest('details')?.open).toBe(true)
+    expect(screen.getByText('Änderungen').closest('details')?.open).toBe(false)
+  })
+  expect(localStorage.getItem('welliathome-sync-open-section')).toBe('all')
+})
+
 it('zeigt eine Vorschau und übernimmt Änderungen erst nach Bestätigung', async () => {
   localStorage.setItem('welliathome-device-sync-enabled', 'true')
   const preview = vi
@@ -210,6 +235,33 @@ it('zeigt eine Vorschau und übernimmt Änderungen erst nach Bestätigung', asyn
   expect(apply).not.toHaveBeenCalled()
   fireEvent.click(screen.getByRole('button', { name: 'Änderungen übernehmen' }))
   await waitFor(() => expect(apply).toHaveBeenCalledWith([file]))
+})
+
+it('zeigt den ausgewählten Dateinamen direkt neben den Datei-Buttons beider Importbereiche', () => {
+  localStorage.setItem('welliathome-device-sync-enabled', 'true')
+  render(
+    <MemoryRouter>
+      <SettingsPage />
+    </MemoryRouter>,
+  )
+  const changesInput = screen.getByLabelText('Änderungen importieren') as HTMLInputElement
+  const fullInput = screen.getByLabelText(
+    'Vollständigen Datenbestand importieren',
+  ) as HTMLInputElement
+  expect(document.querySelectorAll('.settings-import-actions')).toHaveLength(2)
+  expect(screen.getAllByText('Keine Datei ausgewählt')).toHaveLength(2)
+  expect(changesInput.tabIndex).not.toBe(-1)
+  expect(fullInput.tabIndex).not.toBe(-1)
+  expect(screen.getAllByText('Datei auswählen')).toHaveLength(2)
+
+  const changesFile = new File(['changes'], 'wah_update_2026-11-24_16-20-47.zip')
+  const fullFile = new File(['full'], 'wah_daten_2026-11-24_16-20-47.zip')
+  fireEvent.change(changesInput, { target: { files: [changesFile] } })
+  fireEvent.change(fullInput, { target: { files: [fullFile] } })
+
+  expect(screen.getByText(changesFile.name)).toBeTruthy()
+  expect(screen.getByText(fullFile.name)).toBeTruthy()
+  expect(screen.queryByText(/^Ausgewählt:/)).toBeNull()
 })
 
 it('öffnet die Synchronisation über das Synchronisationssymbol ohne Zurück-Link', () => {

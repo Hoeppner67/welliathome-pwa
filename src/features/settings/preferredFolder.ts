@@ -1,4 +1,5 @@
 import { validateFullExport } from './validateFullExport'
+import { validateChangesExport } from './validateChangesExport'
 
 // Folder handles are stored separately from personal data and require permission on every use.
 export type Permission = 'granted' | 'denied' | 'prompt'
@@ -93,11 +94,31 @@ async function permittedFolder(mode: 'read' | 'readwrite'): Promise<DirectoryHan
 
 export async function saveInPreferredFolder(file: File): Promise<string> {
   const folder = await permittedFolder('readwrite')
-  const snapshot = /^wha_daten-.*\.zip$/i.test(file.name)
-    ? await validateFullExport(file)
-    : undefined
-  // Unique names avoid replacing an existing export, even when several devices export concurrently.
-  const name = `${file.name.replace(/\.zip$/i, '')}-${crypto.randomUUID()}.zip`
+  const isShortSnapshotName =
+    /^wah_daten_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}(?:-\d+)?\.zip$/i.test(file.name)
+  const isShortChangesName =
+    /^wah_update_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}(?:-\d+)?\.zip$/i.test(file.name)
+  const isLegacySnapshot =
+    /^(?:(?:wha|wah)_daten[-_]|welliathome-datenbestand-).*\.zip$/i.test(file.name)
+  let snapshot
+  if (isShortSnapshotName || isLegacySnapshot) {
+    try {
+      snapshot = await validateFullExport(file)
+    } catch (reason) {
+      if (isLegacySnapshot) throw reason
+      await validateChangesExport(file)
+    }
+  } else if (isShortChangesName) {
+    await validateChangesExport(file)
+  }
+  const existingNames = new Set<string>()
+  for await (const entry of folder.values()) {
+    if (entry.kind === 'file') existingNames.add(entry.name.toLowerCase())
+  }
+  const baseName = file.name.replace(/\.zip$/i, '')
+  let name = file.name
+  for (let suffix = 2; existingNames.has(name.toLowerCase()); suffix++)
+    name = `${baseName}-${suffix}.zip`
   const handle = await folder.getFileHandle(name, { create: true })
   const writable = await handle.createWritable()
   try {
@@ -131,7 +152,7 @@ export async function saveInPreferredFolder(file: File): Promise<string> {
         if (
           entry.kind !== 'file' ||
           entry.name === name ||
-          !/^(?:wha_daten-|wah_daten-|welliathome-datenbestand-).*\.zip$/i.test(entry.name)
+          !/^(?:wah_|wha_daten-|wah_daten_|welliathome-datenbestand-).*\.zip$/i.test(entry.name)
         )
           continue
         try {

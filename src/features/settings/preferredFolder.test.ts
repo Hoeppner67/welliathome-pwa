@@ -63,7 +63,7 @@ it('speichert und liest ZIP-Dateien über einen erneut geprüften Ordnerzugriff'
     expect(supportsPreferredFolder()).toBe(true)
     expect(await choosePreferredFolder()).toBe('Freigabe')
     const file = new File(['zip'], 'daten.zip')
-    expect(await saveInPreferredFolder(file)).toMatch(/^daten-.+\.zip$/)
+    expect(await saveInPreferredFolder(file)).toBe('daten.zip')
     expect(write).toHaveBeenCalledWith(file)
     expect(close).toHaveBeenCalled()
     expect((await listPreferredFolderZips()).map((item) => item.name)).toEqual(['test.zip'])

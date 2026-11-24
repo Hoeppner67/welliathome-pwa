@@ -70,6 +70,16 @@ describe('BackupPage', () => {
     expect(await screen.findByRole('heading', { name: 'Datensicherung' })).toBeTruthy()
   })
 
+  it('zeigt keinen Startseite-Link oben auf der Datensicherungsseite', async () => {
+    render(
+      <MemoryRouter>
+        <BackupPage />
+      </MemoryRouter>,
+    )
+    expect(await screen.findByRole('heading', { name: 'Datensicherung' })).toBeTruthy()
+    expect(screen.queryByRole('link', { name: /Startseite/ })).toBeNull()
+  })
+
   it('empfiehlt auf der Startseite ein Backup, wenn persönliche Daten noch nicht exportiert wurden', async () => {
     await birdRepository.create({ name: 'Pico', species: 'Wellensittich' })
     render(

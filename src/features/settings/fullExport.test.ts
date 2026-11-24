@@ -88,7 +88,9 @@ it('exportiert persönliche Datensätze und Dokumente mit überprüfbaren Prüfs
   const data = JSON.parse(strFromU8(archive['data.json']))
   expect(manifest.formatVersion).toBe(2)
   expect(manifest.packageId).toBeTruthy()
-  expect(firstFile.name).toContain(manifest.packageId)
+  expect(firstFile.name).toMatch(
+    /^wah_daten_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}(?:-\d+)?\.zip$/,
+  )
   expect(manifest.deviceId).toBeTruthy()
   expect(data.data.birds[0].name).toBe('Pico')
   expect(data.data.mediaAssets[0].mediaPath).toBe('media/0')
