@@ -1,0 +1,74 @@
+.pwa-status {
+  display: grid;
+  gap: 0.65rem;
+  width: min(100% - 2rem, var(--content-max));
+  margin: 0.75rem auto 0;
+  color: var(--color-brown);
+}
+.pwa-status__message,
+.pwa-status__action,
+.pwa-status__ios {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-card);
+}
+.pwa-status__message {
+  border-inline-start: 4px solid var(--color-accent);
+}
+.pwa-status__action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.pwa-status__action p {
+  margin: 0;
+  min-width: min(100%, 16rem);
+}
+.pwa-status__warning {
+  color: #7b3f12;
+  font-weight: 650;
+}
+.pwa-status__ios summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.pwa-status__ios ol {
+  margin: 0.6rem 0 0;
+  padding-inline-start: 1.5rem;
+}
+.pwa-status button {
+  min-height: 2.75rem;
+}
+.pwa-status .pwa-status__install-button {
+  background: #1b5e20;
+  border-color: #1b5e20;
+  color: #fff;
+}
+.pwa-status .pwa-status__install-button:hover:not(:disabled) {
+  background: #124416;
+  border-color: #124416;
+  color: #fff;
+}
+.pwa-status .pwa-status__update-button {
+  background: var(--color-green);
+}
+.pwa-status .pwa-status__update-button:hover {
+  background: #124619;
+}
+@media (max-width: 38rem) {
+  .pwa-status {
+    width: min(100% - 1.25rem, var(--content-max));
+    margin-top: 0.5rem;
+  }
+  .pwa-status__action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .pwa-status__action .button {
+    width: 100%;
+  }
+}

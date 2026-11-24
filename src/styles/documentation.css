@@ -1,0 +1,230 @@
+.documentation-card {
+  margin-top: 1rem;
+  overflow: hidden;
+}
+.documentation-accordion {
+  min-width: 0;
+}
+.documentation-accordion__summary {
+  display: list-item;
+  min-height: 3.75rem;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  color: var(--color-brown);
+  font-size: 1.15rem;
+  font-weight: 750;
+  list-style-position: inside;
+}
+.documentation-accordion__summary:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: -3px;
+}
+.documentation-accordion__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  vertical-align: middle;
+  margin-inline: 0.5rem 0.75rem;
+  color: currentColor;
+}
+.documentation-accordion[open] > .documentation-accordion__summary {
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-accent);
+}
+.documentation-accordion__content {
+  padding: 1rem;
+}
+.documentation-section {
+  display: grid;
+  gap: 1.25rem;
+  min-width: 0;
+}
+.documentation-form-card {
+  padding: 1rem;
+  border-color: var(--color-border);
+  box-shadow: none;
+}
+.documentation-form-card h3,
+.documentation-subsection h3 {
+  margin: 0 0 0.85rem;
+  font-size: 1.05rem;
+}
+.documentation-form-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.9rem;
+}
+.medication-date-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+.medication-date-fields .form-field {
+  min-width: 0;
+}
+.medication-date-fields input {
+  width: 100%;
+  min-width: 0;
+  padding-inline: 0.35rem;
+}
+.documentation-form-field--wide {
+  grid-column: 1/-1;
+}
+.documentation-form-card .form-actions {
+  margin-top: 1rem;
+}
+.documentation-empty,
+.medication-group__empty {
+  margin: 0.5rem 0;
+  color: var(--color-muted);
+}
+.documentation-subsection {
+  min-width: 0;
+}
+.weight-chart {
+  min-width: 0;
+}
+.weight-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.weight-chart__grid-line {
+  stroke: var(--color-border);
+  stroke-width: 1;
+}
+.weight-chart__axis-label {
+  fill: var(--color-muted);
+  font-family: var(--font-system);
+  font-size: 14px;
+}
+.weight-chart__line {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.weight-chart__point {
+  fill: var(--color-brown);
+  stroke: var(--color-card);
+  stroke-width: 2;
+}
+.weight-chart__caption {
+  margin: 0.2rem 0 0;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+.weight-list,
+.medication-list {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.weight-list__item,
+.medication-list__item {
+  padding: 0.9rem 1rem;
+  box-shadow: none;
+}
+.weight-list__measure {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem 1rem;
+}
+.weight-list__measure time,
+.medication-list__details dt {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+.weight-list__measure strong {
+  font-size: 1.08rem;
+}
+.weight-list__notes {
+  margin: 0.4rem 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.record-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.record-actions .button {
+  min-height: 2.75rem;
+}
+.medication-groups {
+  display: grid;
+  gap: 1.25rem;
+}
+.medication-group__title {
+  margin: 0 0 0.6rem;
+  font-size: 1.05rem;
+}
+.medication-list__item h4 {
+  margin: 0 0 0.65rem;
+  font-size: 1.08rem;
+  overflow-wrap: anywhere;
+}
+.medication-list__details {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.55rem;
+  margin: 0;
+}
+.medication-list__details > div {
+  min-width: 0;
+}
+.medication-list__details dt {
+  font-weight: 650;
+}
+.medication-list__details dd {
+  margin: 0.1rem 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.dialog-backdrop {
+  z-index: 30;
+}
+.delete-dialog {
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+@media (min-width: 38rem) {
+  .documentation-accordion__content {
+    padding: 1.25rem;
+  }
+  .documentation-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .medication-list__details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .medication-list__notes {
+    grid-column: 1/-1;
+  }
+}
+@media (max-width: 30rem) {
+  .documentation-accordion__summary {
+    min-height: 3.5rem;
+    padding: 0.7rem 0.8rem;
+    font-size: 1.05rem;
+  }
+  .documentation-accordion__content {
+    padding: 0.75rem;
+  }
+  .documentation-form-card {
+    padding: 0.85rem;
+  }
+  .record-actions .button {
+    flex: 1;
+  }
+  .weight-chart__axis-label {
+    font-size: 15px;
+  }
+}
