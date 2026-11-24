@@ -1,0 +1,357 @@
+﻿.settings-page {
+  width: min(100%, 58rem);
+  margin-inline: auto;
+}
+.settings-card {
+  padding: clamp(1.2rem, 4vw, 2rem);
+  margin-top: 1rem;
+}
+.settings-card h2 {
+  margin-top: 0;
+}
+.settings-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.settings-folder-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.settings-folder-toggle__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--color-brown);
+  mask: url('/welli-icons/Einstellungen.svg') center / contain no-repeat;
+}
+.settings-folder-toggle:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+.settings-folder-settings {
+  margin: 0 0 1rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+}
+.settings-folder-settings h3 {
+  margin: 0 0 1rem;
+}
+.settings-folder-settings input[type='checkbox'] {
+  accent-color: var(--color-green);
+}
+.settings-info-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.settings-info-heading p {
+  margin-block: 0.5rem 1rem;
+}
+.settings-info-button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.settings-info-button img {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+.settings-info-button:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+.settings-info-box,
+.settings-status-box {
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+}
+.settings-info-box h3 {
+  margin-top: 0;
+}
+.settings-info-box p:last-child,
+.settings-status-box p:last-child {
+  margin-bottom: 0;
+}
+.settings-status-box {
+  margin-top: 1.5rem;
+}
+.settings-status-box p:first-child {
+  margin-top: 0;
+}
+.settings-status-box p {
+  margin-block: 0.3rem;
+  line-height: 1.3;
+}
+.settings-success {
+  color: var(--color-green);
+}
+.settings-error {
+  color: #a12622;
+}
+.settings-create-button:disabled {
+  background: #e0e0e0;
+  border-color: #b8b8b8;
+  color: #555;
+  cursor: default;
+}
+.settings-sync-section {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
+}
+.settings-sync-section h3 {
+  margin: 0 0 1rem;
+}
+.settings-export-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.settings-share-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  color: inherit;
+  background: var(--color-surface);
+  cursor: pointer;
+}
+.settings-share-button svg {
+  width: 100%;
+  height: 100%;
+}
+.settings-share-button.settings-folder-action svg {
+  transform: scale(1.12);
+}
+.settings-share-button:not(:disabled):not(.settings-share-button--exported) {
+  border-color: var(--color-green);
+  background: var(--color-green-soft);
+  color: var(--color-green);
+}
+.settings-share-button:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+.settings-share-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.settings-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 2.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.settings-toggle__input {
+  appearance: none;
+  flex: none;
+  width: 3.25rem;
+  height: 1.9rem;
+  margin: 0;
+  border: 2px solid var(--color-muted);
+  border-radius: 999px;
+  background: var(--color-border);
+  cursor: pointer;
+}
+.settings-toggle__input::before {
+  display: block;
+  width: 1.35rem;
+  height: 1.35rem;
+  margin: 0.15rem;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 30%);
+  content: '';
+  transition: transform 0.15s ease;
+}
+.settings-toggle__input:checked {
+  border-color: var(--color-green);
+  background: var(--color-green);
+}
+.settings-toggle__input:checked::before {
+  transform: translateX(1.35rem);
+}
+.settings-toggle__input:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+@media (forced-colors: active) {
+  .settings-toggle__input {
+    appearance: auto;
+  }
+  .settings-toggle__input::before {
+    content: none;
+  }
+}
+.settings-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.settings-actions label {
+  margin-top: 0.75rem;
+  font-weight: 700;
+}
+.settings-actions input {
+  max-width: 100%;
+}
+.settings-actions > [aria-live] {
+  width: 100%;
+}
+.settings-preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  width: 100%;
+}
+.settings-conflicts {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+.settings-conflicts pre {
+  overflow: auto;
+  max-height: 18rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.settings-folder {
+  margin-block: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+}
+.settings-folder summary {
+  padding: 0.9rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.settings-folder summary:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+.settings-folder > .settings-actions {
+  padding: 0 1rem 1rem;
+}
+.settings-folder-list {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+}
+.settings-folder-list h3 {
+  margin-top: 0;
+}
+.settings-folder-list .settings-actions {
+  gap: 0.4rem;
+}
+.settings-folder-list .settings-folder-list__file {
+  margin-top: 0;
+}
+.settings-folder-list__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+.settings-folder-list__new {
+  color: var(--color-green);
+}
+.settings-folder-list__conflict {
+  color: #ad2020;
+}
+.settings-folder-list__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.settings-folder-name {
+  color: var(--color-green);
+  font-weight: 700;
+}
+.settings-folder .settings-actions input[type='checkbox'] {
+  accent-color: var(--color-green);
+}
+.settings-folder-select--selected {
+  border-color: var(--color-green);
+  background: var(--color-green-soft);
+  color: var(--color-green);
+}
+
+.settings-folder.settings-sync-section {
+  padding-top: 0;
+}
+.settings-accordion-content {
+  padding: 0 1rem 1rem;
+}
+.settings-accordion-content fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.settings-sync-accordion {
+  margin-top: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  overflow: hidden;
+}
+.settings-sync-accordion > .settings-folder {
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+}
+.settings-sync-accordion > .settings-folder:last-child {
+  border-bottom: 0;
+}
+
+/* A saved directory is visually confirmed independently of whether the preferred-folder option is active. */
+.settings-folder-select--selected,
+.settings-folder-select--selected:hover {
+  background: #dcebd5;
+  border-color: #407e01;
+  color: #1b5e20;
+}
+.settings-folder-action:not(:disabled):not(.settings-folder-action--completed),
+.settings-folder-action:not(:disabled):not(.settings-folder-action--completed):hover {
+  background: #dcebd5;
+  border-color: #407e01;
+  color: #1b5e20;
+}

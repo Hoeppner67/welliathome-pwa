@@ -1,0 +1,37 @@
+body {
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  background: #e5e2d3;
+  color: #333;
+  font:
+    1rem/1.6 system-ui,
+    sans-serif;
+}
+
+main {
+  width: min(34rem, calc(100% - 2rem));
+  padding: 2rem;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 0.5rem 1.5rem #0002;
+}
+
+h1 {
+  color: #564229;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.7rem 1rem;
+  border-radius: 0.5rem;
+  background: #407e01;
+  color: #fff;
+  text-decoration: none;
+}
+
+.button:focus-visible {
+  outline: 3px solid #407e01;
+  outline-offset: 3px;
+}

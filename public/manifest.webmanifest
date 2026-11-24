@@ -1,0 +1,59 @@
+{
+  "id": "/",
+  "name": "Welli@Home",
+  "short_name": "Welli@Home",
+  "description": "Dein Zuhause für Wellensittiche.",
+  "lang": "de-DE",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#E5E2D3",
+  "theme_color": "#F2F2F2",
+  "categories": ["lifestyle", "health"],
+  "shortcuts": [
+    {
+      "name": "Erinnerungen",
+      "short_name": "Erinnerungen",
+      "url": "/schwarm/erinnerungen",
+      "icons": [
+        {
+          "src": "/welli-icons/kalender.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Vogel hinzufügen",
+      "short_name": "Vogel hinzufügen",
+      "url": "/schwarm/neu",
+      "icons": [
+        {
+          "src": "/welli-icons/add.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "icons": [
+    {
+      "src": "/welli-icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/welli-icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/welli-icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
